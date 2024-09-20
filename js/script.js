@@ -4,31 +4,50 @@ const NUMERO_SECRETO = Math.floor(Math.random() * 100) + 1; // Número secreto e
 let intentos = 0; // Contador de intentos
 let adivinanzas = []; // Array para almacenar las adivinanzas del usuario
 
+// Función para mostrar un mensaje de bienvenida
+function mostrarBienvenida() {
+    alert("¡Bienvenido al juego de adivinanza de números!");
+}
+
+// Función para obtener y validar la adivinanza del usuario
+function obtenerAdivinanza() {
+    let adivinanza = parseInt(prompt("Adivina un número entre 1 y 100:"));
+    
+    // Validación de la entrada del usuario
+    if (isNaN(adivinanza) || adivinanza < 1 || adivinanza > 100) {
+        alert("Por favor, ingresa un número válido entre 1 y 100.");
+        return obtenerAdivinanza(); // Repetir la solicitud si la entrada es inválida
+    }
+    
+    return adivinanza;
+}
+
+// Función para procesar la adivinanza y dar feedback
+function procesarAdivinanza(adivinanza, numeroSecreto) {
+    intentos++;
+    adivinanzas.push(adivinanza);
+    
+    if (adivinanza === numeroSecreto) {
+        alert(`¡Felicidades! Adivinaste el número secreto ${numeroSecreto} en ${intentos} intento(s).`);
+        return true; // El juego termina
+    } else if (adivinanza < numeroSecreto) {
+        alert("El número secreto es mayor. Intenta de nuevo.");
+    } else {
+        alert("El número secreto es menor. Intenta de nuevo.");
+    }
+    
+    return false; // El juego continúa
+}
+
 // Función principal del juego
 function jugar() {
-    alert("¡Bienvenido al juego de adivinanza de números!");
+    mostrarBienvenida();
     
     while (intentos < MAX_INTENTOS) {
-        let adivinanza = parseInt(prompt("Adivina un número entre 1 y 100:"));
+        let adivinanza = obtenerAdivinanza();
         
-        // Validación de la entrada del usuario
-        if (isNaN(adivinanza) || adivinanza < 1 || adivinanza > 100) {
-            alert("Por favor, ingresa un número válido entre 1 y 100.");
-            continue;
-        }
-        
-        // Incremento del contador de intentos y almacenamiento de la adivinanza
-        intentos++;
-        adivinanzas.push(adivinanza);
-        
-        // Comprobación de la adivinanza
-        if (adivinanza === NUMERO_SECRETO) {
-            alert(`¡Felicidades! Adivinaste el número secreto ${NUMERO_SECRETO} en ${intentos} intento(s).`);
-            break;
-        } else if (adivinanza < NUMERO_SECRETO) {
-            alert("El número secreto es mayor. Intenta de nuevo.");
-        } else {
-            alert("El número secreto es menor. Intenta de nuevo.");
+        if (procesarAdivinanza(adivinanza, NUMERO_SECRETO)) {
+            break; // Terminar el juego si se adivina el número
         }
         
         // Mostrar mensajes al usuario dependiendo de los intentos restantes
@@ -36,9 +55,7 @@ function jugar() {
             alert(`Lo siento, has agotado todos tus intentos. El número secreto era ${NUMERO_SECRETO}.`);
         } else {
             console.log(`Intento ${intentos} de ${MAX_INTENTOS}: ${adivinanza}`);
-            if (confirm("¿Quieres seguir jugando?")) {
-                continue;
-            } else {
+            if (!confirm("¿Quieres seguir jugando?")) {
                 alert("Gracias por jugar. ¡Hasta la próxima!");
                 break;
             }
