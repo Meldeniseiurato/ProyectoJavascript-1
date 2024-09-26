@@ -1,99 +1,22 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Adivinanza</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #resultado {
-            margin-top: 20px;
-            font-weight: bold;
-        }
-        #reiniciarButton {
-            display: none;
-        }
-    </style>
+    <title>Adivinanzas</title>
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="./js/script.js"></script>
 </head>
 <body>
-    <h1>Juego de Adivinanza de Números</h1>
-    <p>Adivina un número entre 1 y 100:</p>
-    <input type="number" id="adivinanzaInput" min="1" max="100">
-    <button id="adivinanzaButton">Adivinar</button>
-    <div id="resultado"></div>
-    <button id="reiniciarButton">Reiniciar Juego</button>
-
-    <script>
-        const MAX_INTENTOS = 5;
-        let intentos = 0;
-        let adivinanzas = [];
-        const NUMERO_SECRETO = Math.floor(Math.random() * 100) + 1;
-
-        // Cargar adivinanzas desde localStorage
-        const cargarAdivinanzas = () => {
-            const adivinanzasGuardadas = localStorage.getItem('adivinanzas');
-            return adivinanzasGuardadas ? JSON.parse(adivinanzasGuardadas) : [];
-        };
-
-        const guardarAdivinanzas = () => {
-            localStorage.setItem('adivinanzas', JSON.stringify(adivinanzas));
-        };
-
-        const mostrarMensaje = (mensaje) => {
-            document.getElementById('resultado').innerText = mensaje;
-        };
-
-        const procesarAdivinanza = (adivinanza) => {
-            intentos++;
-            adivinanzas.push(adivinanza);
-            guardarAdivinanzas();
-
-            if (adivinanza === NUMERO_SECRETO) {
-                mostrarMensaje(`¡Felicidades! Adivinaste el número secreto ${NUMERO_SECRETO} en ${intentos} intento(s).`);
-                document.getElementById('adivinanzaButton').disabled = true;
-                document.getElementById('reiniciarButton').style.display = 'block';
-            } else if (intentos >= MAX_INTENTOS) {
-                mostrarMensaje(`Lo siento, has agotado todos tus intentos. El número secreto era ${NUMERO_SECRETO}.`);
-                document.getElementById('adivinanzaButton').disabled = true;
-                document.getElementById('reiniciarButton').style.display = 'block';
-            } else if (adivinanza < NUMERO_SECRETO) {
-                mostrarMensaje("El número secreto es mayor. Intenta de nuevo.");
-            } else {
-                mostrarMensaje("El número secreto es menor. Intenta de nuevo.");
-            }
-        };
-
-        document.getElementById('adivinanzaButton').addEventListener('click', () => {
-            const adivinanzaInput = document.getElementById('adivinanzaInput');
-            const adivinanza = parseInt(adivinanzaInput.value);
-           
-            if (isNaN(adivinanza) || adivinanza < 1 || adivinanza > 100) {
-                mostrarMensaje("Por favor, ingresa un número válido entre 1 y 100.");
-                return;
-            }
-
-            procesarAdivinanza(adivinanza);
-            adivinanzaInput.value = ''; // Limpiar el campo de entrada
-        });
-
-        document.getElementById('reiniciarButton').addEventListener('click', () => {
-            intentos = 0;
-            adivinanzas = [];
-            localStorage.removeItem('adivinanzas'); // Limpiar localStorage
-            mostrarMensaje('');
-            document.getElementById('adivinanzaButton').disabled = false;
-            document.getElementById('reiniciarButton').style.display = 'none';
-            document.getElementById('adivinanzaInput').value = '';
-        });
-
-        // Cargar adivinanzas al inicio
-        adivinanzas = cargarAdivinanzas();
-        if (adivinanzas.length > 0) {
-            mostrarMensaje(`Tus adivinanzas anteriores: ${adivinanzas.join(', ')}`);
-        }
-    </script>
+    <h1>Juego de Adivinanzas</h1>
+    <div id="game">
+        <input type="number" id="guessInput" placeholder="Adivina un número entre 1 y 100" min="1" max="100">
+        <button id="guessButton">Adivinar</button>
+        <button id="restartButton" style="display: none;">Reiniciar Juego</button>
+        <div id="message"></div>
+        <div id="attempts"></div>
+    </div>
+    <script src="./js/script.js"></script>
 </body>
 </html>
+

@@ -1,70 +1,90 @@
 // Declaración de constantes y variables
-const MAX_INTENTOS = 5;  // Número máximo de intentos permitidos
-const NUMERO_SECRETO = Math.floor(Math.random() * 100) + 1; // Número secreto entre 1 y 100
-let intentos = 0; // Contador de intentos
-let adivinanzas = []; // Array para almacenar las adivinanzas del usuario
+const MAX_INTENTOS = 5;
+let numeroSecreto;
+let intentos = 0;
+let adivinanzas = [];
 
-// Función para mostrar un mensaje de bienvenida
-function mostrarBienvenida() {
-    alert("¡Bienvenido al juego de adivinanza de números!");
+// Inicializa el juego
+document.addEventListener("DOMContentLoaded", () => {
+    cargarDatos();
+    document.getElementById("guessButton").addEventListener("click", realizarAdivinanza);
+    document.getElementById("restartButton").addEventListener("click", reiniciarJuego);
+});
+
+// Función para iniciar el juego
+function iniciarJuego() {
+    numeroSecreto = Math.floor(Math.random() * 100) + 1;
+    intentos = 0;
+    adivinanzas = [];
+    document.getElementById("message").textContent = "¡Bienvenido al juego de adivinanza de números!";
+    document.getElementById("guessInput").value = '';
+    document.getElementById("attempts").textContent = '';
+    document.getElementById("restartButton").style.display = "none";
 }
 
-// Función para obtener y validar la adivinanza del usuario
-function obtenerAdivinanza() {
-    let adivinanza = parseInt(prompt("Adivina un número entre 1 y 100:"));
+// Función para realizar la adivinanza
+function realizarAdivinanza() {
+    const adivinanza = parseInt(document.getElementById("guessInput").value);
     
-    // Validación de la entrada del usuario
+    // Validación de la entrada
     if (isNaN(adivinanza) || adivinanza < 1 || adivinanza > 100) {
-        alert("Por favor, ingresa un número válido entre 1 y 100.");
-        return obtenerAdivinanza(); // Repetir la solicitud si la entrada es inválida
+        mostrarMensaje("Por favor, ingresa un número válido entre 1 y 100.");
+        return;
     }
-    
-    return adivinanza;
-}
 
-// Función para procesar la adivinanza y dar feedback
-function procesarAdivinanza(adivinanza, numeroSecreto) {
     intentos++;
     adivinanzas.push(adivinanza);
-    
+    guardarDatos();
+
     if (adivinanza === numeroSecreto) {
-        alert(`¡Felicidades! Adivinaste el número secreto ${numeroSecreto} en ${intentos} intento(s).`);
-        return true; // El juego termina
+        mostrarMensaje(`¡Felicidades! Adivinaste el número secreto ${numeroSecreto} en ${intentos} intento(s).`);
+        document.getElementById("restartButton").style.display = "inline";
     } else if (adivinanza < numeroSecreto) {
-        alert("El número secreto es mayor. Intenta de nuevo.");
+        mostrarMensaje("El número secreto es mayor. Intenta de nuevo.");
     } else {
-        alert("El número secreto es menor. Intenta de nuevo.");
+        mostrarMensaje("El número secreto es menor. Intenta de nuevo.");
     }
-    
-    return false; // El juego continúa
+
+    if (intentos >= MAX_INTENTOS) {
+        mostrarMensaje(`Lo siento, has agotado todos tus intentos. El número secreto era ${numeroSecreto}.`);
+        document.getElementById("restartButton").style.display = "inline";
+    }
+
+    mostrarIntentos();
 }
 
-// Función principal del juego
-function jugar() {
-    mostrarBienvenida();
-    
-    while (intentos < MAX_INTENTOS) {
-        let adivinanza = obtenerAdivinanza();
-        
-        if (procesarAdivinanza(adivinanza, NUMERO_SECRETO)) {
-            break; // Terminar el juego si se adivina el número
-        }
-        
-        // Mostrar mensajes al usuario dependiendo de los intentos restantes
-        if (intentos === MAX_INTENTOS) {
-            alert(`Lo siento, has agotado todos tus intentos. El número secreto era ${NUMERO_SECRETO}.`);
-        } else {
-            console.log(`Intento ${intentos} de ${MAX_INTENTOS}: ${adivinanza}`);
-            if (!confirm("¿Quieres seguir jugando?")) {
-                alert("Gracias por jugar. ¡Hasta la próxima!");
-                break;
-            }
-        }
-    }
-    
-    // Mostrar todas las adivinanzas realizadas
-    console.log("Tus adivinanzas fueron: ", adivinanzas);
+// Función para mostrar mensajes al usuario
+function mostrarMensaje(mensaje) {
+    document.getElementById("message").textContent = mensaje;
 }
 
-// Llamada a la función principal para iniciar el juego
-jugar();
+// Función para mostrar intentos
+function mostrarIntentos() {
+    document.getElementById("attempts").textContent = `Tus adivinanzas: ${adivinanzas.join(", ")}`;
+}
+
+// Función para reiniciar el juego
+function reiniciarJuego() {
+    iniciarJuego();
+}
+
+// Función para guardar datos en Local Storage
+function guardarDatos() {
+    localStorage.setItem("adivinanzas", JSON.stringify(adivinanzas));
+    localStorage.setItem("intentos", intentos);
+}
+
+// Función para cargar datos desde Local Storage
+function cargarDatos() {
+    const storedAdivinanzas = localStorage.getItem("adivinanzas");
+    const storedIntentos = localStorage.getItem("intentos");
+    
+    if (storedAdivinanzas) {
+        adivinanzas = JSON.parse(storedAdivinanzas);
+    }
+    if (storedIntentos) {
+        intentos = parseInt(storedIntentos);
+    }
+
+    iniciarJuego();
+}
