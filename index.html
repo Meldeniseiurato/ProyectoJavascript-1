@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adivinanzas</title>
-    <link rel="stylesheet" href="./style.css">
-    <script defer src="./js/script.js"></script>
+    <link rel="stylesheet" href="estilos/styles.css">
+    <title>Trivia de Adivinanzas Numéricas</title>
 </head>
 <body>
-    <h1>Juego de Adivinanzas</h1>
-    <div id="game">
-        <input type="number" id="guessInput" placeholder="Adivina un número entre 1 y 100" min="1" max="100">
-        <button id="guessButton">Adivinar</button>
-        <button id="restartButton" style="display: none;">Reiniciar Juego</button>
-        <div id="message"></div>
-        <div id="attempts"></div>
+    <div id="app">
+        <h1>Trivia de Adivinanzas Numéricas</h1>
+        <div id="question-container"></div>
+        <div id="answer-buttons" class="btn-container"></div>
+        <button id="next-button" class="btn hide">Siguiente</button>
     </div>
-    <script src="./js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="scripts/trivia.js"></script>
+    <script src="scripts/ui.js"></script>
 </body>
 </html>
+
 

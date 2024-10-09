@@ -1,0 +1,18 @@
+[
+    {
+        "pregunta": "¿Cuál es el número que representa la cantidad de patas de una araña?",
+        "respuestas": [
+            { "texto": "6", "correcta": false },
+            { "texto": "8", "correcta": true },
+            { "texto": "10", "correcta": false }
+        ]
+    },
+    {
+        "pregunta": "¿Qué número es conocido como el número de la suerte?",
+        "respuestas": [
+            { "texto": "7", "correcta": true },
+            { "texto": "13", "correcta": false },
+            { "texto": "3", "correcta": false }
+        ]
+    }
+]
